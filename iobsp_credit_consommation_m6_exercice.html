@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="fr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Exercice d'entraînement — module 6</title><style>
+:root{--prune:#8C1E70;--prune-fonce:#5E1349;--prune-clair:#F4E6EE;--accent:#C77BAA;
+ --vert:#283C28;--gris:#3C3C3C;--gris-moyen:#8A7A85;--filet:#E8DCE5;--creme:#FAF6F8;
+ --ok:#2F7A4F;--ko:#B23B3B;--amb:#B5852A;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--creme);color:var(--gris);
+ font-family:"Nunito","Segoe UI",Helvetica,Arial,sans-serif;font-size:16px;line-height:1.6;
+ -webkit-user-select:none;-moz-user-select:none;user-select:none}
+.wrap{max-width:900px;margin:0 auto;padding:0 18px 60px}
+header.bandeau{background:var(--prune-fonce);color:#fff;padding:18px 0;border-bottom:4px solid var(--accent)}
+header.bandeau .wrap{padding-bottom:0}
+.chapitre{font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;color:#EAD3E3}
+.chapitre span{color:var(--accent);margin:0 6px}
+h1{font-family:Georgia,"Times New Roman",serif;font-size:27px;line-height:1.25;margin:8px 0 4px;color:#fff}
+.sous{color:#EAD3E3;font-size:14.5px;margin:0}
+.consigne{background:var(--prune-clair);border-left:5px solid var(--prune);padding:14px 18px;
+ border-radius:0 8px 8px 0;margin:26px 0 8px;font-size:15px}
+.carte{background:#fff;border:1px solid var(--filet);border-radius:10px;padding:20px 22px;margin:18px 0;
+ box-shadow:0 1px 2px rgba(94,19,73,.05)}
+.etiq{display:inline-block;background:var(--prune-clair);color:var(--prune-fonce);font-size:11.5px;
+ letter-spacing:.09em;text-transform:uppercase;padding:3px 10px;border-radius:11px;font-weight:700;margin-bottom:10px}
+.enonce{font-weight:700;color:var(--vert);font-size:16.5px;margin:0 0 12px}
+.scenario{background:#FCF9FB;border:1px dashed var(--filet);border-radius:8px;padding:14px 16px;margin:0 0 14px;font-size:15px}
+.opts{list-style:none;margin:0;padding:0}
+.opts li{margin:7px 0}
+.opts label{display:flex;gap:10px;align-items:flex-start;padding:11px 14px;border:1.5px solid var(--filet);
+ border-radius:8px;cursor:pointer;background:#fff;transition:border-color .12s,background .12s}
+.opts label:hover{border-color:var(--accent);background:#FDF9FC}
+.opts input{margin-top:4px;accent-color:var(--prune);flex:0 0 auto}
+.opts label.bonne{border-color:var(--ok);background:#F1F8F3}
+.opts label.mauvaise{border-color:var(--ko);background:#FBF2F2}
+.fb{margin-top:14px;padding:13px 16px;border-radius:8px;font-size:14.7px;display:none}
+.fb.on{display:block}
+.fb.j{background:#F1F8F3;border-left:4px solid var(--ok)}
+.fb.n{background:#FBF2F2;border-left:4px solid var(--ko)}
+.fb .verdict{font-weight:800;display:block;margin-bottom:5px}
+.fb.j .verdict{color:var(--ok)}.fb.n .verdict{color:var(--ko)}
+.ref{display:inline-block;margin-top:8px;font-size:12.5px;color:var(--gris-moyen);font-style:italic}
+button{font-family:inherit;font-size:15px;font-weight:800;border:0;border-radius:8px;padding:12px 22px;cursor:pointer}
+button.principal{background:var(--prune);color:#fff}
+button.principal:hover{background:var(--prune-fonce)}
+button.principal:disabled{background:#D9CBD5;color:#fff;cursor:not-allowed}
+button.secondaire{background:#fff;color:var(--prune-fonce);border:1.5px solid var(--prune)}
+.barre-actions{display:flex;gap:12px;flex-wrap:wrap;margin:26px 0 0}
+.bilan{display:none;margin:28px 0 0;border-radius:12px;overflow:hidden;border:1px solid var(--filet);background:#fff}
+.bilan.on{display:block}
+.bilan .tete{padding:20px 24px;color:#fff;text-align:center}
+.bilan .tete .pct{font-family:Georgia,serif;font-size:40px;font-weight:700;line-height:1}
+.bilan .tete .lib{font-size:14px;letter-spacing:.11em;text-transform:uppercase;margin-top:6px;opacity:.92}
+.bilan .corps{padding:18px 24px;font-size:15px}
+.progression{height:7px;background:var(--filet);border-radius:4px;overflow:hidden;margin:22px 0 4px}
+.progression i{display:block;height:100%;background:var(--prune);width:0;transition:width .3s}
+.compteur{font-size:12.5px;color:var(--gris-moyen);text-align:right}
+input[type=number]{font-family:inherit;font-size:15.5px;padding:9px 12px;border:1.5px solid var(--filet);
+ border-radius:8px;background:#fff;color:var(--vert);font-weight:700;width:130px;
+ -webkit-user-select:text;-moz-user-select:text;user-select:text}
+input:focus{outline:0;border-color:var(--accent)}
+input.bon{border-color:var(--ok);background:#F1F8F3}
+input.faux{border-color:var(--ko);background:#FBF2F2}
+.ligne-reponse{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:6px}
+.ligne-reponse .unite{font-size:14.5px;color:var(--gris-moyen)}
+.reserve{display:flex;flex-wrap:wrap;gap:9px;padding:16px;background:#fff;border:1.5px dashed var(--accent);
+ border-radius:10px;min-height:64px;align-content:flex-start}
+.jeton{background:var(--prune-clair);border:1.5px solid var(--accent);color:var(--prune-fonce);
+ padding:8px 13px;border-radius:20px;font-size:14.3px;font-weight:700;cursor:grab;line-height:1.35}
+.jeton.actif{background:var(--prune);color:#fff;border-color:var(--prune-fonce);box-shadow:0 0 0 3px rgba(140,30,112,.18)}
+.jeton.bon{background:#EAF5EE;border-color:var(--ok);color:#1E5334}
+.jeton.faux{background:#FBF2F2;border-color:var(--ko);color:#8C2626}
+.zones{display:grid;gap:14px;margin-top:16px;grid-template-columns:repeat(auto-fit,minmax(215px,1fr))}
+.zone{background:#fff;border:1.5px solid var(--filet);border-radius:10px;padding:12px 14px;min-height:120px}
+.zone.survol{border-color:var(--prune);background:#FDF7FB}
+.zone h4{margin:0 0 4px;font-family:Georgia,serif;font-size:15.5px;color:var(--prune-fonce)}
+.zone .desc{font-size:12.7px;color:var(--gris-moyen);margin:0 0 10px;line-height:1.4}
+.zone .depot{display:flex;flex-wrap:wrap;gap:8px;min-height:44px}
+.aide{font-size:13.6px;color:var(--gris-moyen);margin-top:10px;font-style:italic}
+footer.pied{text-align:center;font-size:12.4px;color:var(--gris-moyen);padding:26px 18px 12px;
+ border-top:1px solid var(--filet);margin-top:44px}
+@media(max-width:560px){h1{font-size:22px}.carte{padding:16px 15px}.wrap{padding:0 13px 44px}}
+</style></head>
+<body>
+<header class="bandeau"><div class="wrap">
+ <div class="chapitre">IOBSP Niveau 2 · Bloc 2 <span>/</span> Journée 3 — Module 6</div><h1>Exercice d'entraînement — module 6</h1><p class="sous">3 activités · garanties, caution, conjoint · non noté, rien à déposer · environ 18 min</p>
+</div></header>
+<div class="wrap">
+<div class="consigne"><b>🎯 Exercice d'entraînement.</b> Trois activités : règles à rattacher à leur article, situations à trancher, affirmations à vérifier. La question qui structure tout : <b>qui est engagé, et sur quel patrimoine ?</b> Aucune note n'est conservée et rien n'est à déposer.</div>
+<div class="progression"><i id="jauge"></i></div>
+<div class="compteur" id="compteur">0 / 24 réponses</div>
+<div class="carte"><span class="etiq">Activité 1 — Chaque règle à son article</span><div class="scenario">Dix règles, cinq articles du code civil. Trois d'entre eux régissent le cautionnement, deux le sort du conjoint.</div><div class="reserve" id="reserve"><div class="jeton" draggable="true" data-id="j1">La caution appose elle-même la mention, à peine de nullité</div><div class="jeton" draggable="true" data-id="j2">En cas de différence, la somme en toutes lettres l&#x27;emporte</div><div class="jeton" draggable="true" data-id="j3">La privation des bénéfices de discussion et de division doit être reconnue dans la mention</div><div class="jeton" draggable="true" data-id="j4">Le créancier professionnel alerte la caution quand l&#x27;engagement du débiteur est inadapté à ses capacités</div><div class="jeton" draggable="true" data-id="j5">Sanction : déchéance du droit du créancier à hauteur du préjudice subi par la caution</div><div class="jeton" draggable="true" data-id="j6">L&#x27;engagement manifestement disproportionné aux revenus et au patrimoine de la caution est réduit</div><div class="jeton" draggable="true" data-id="j7">Un emprunt n&#x27;engage pas solidairement le conjoint, sauf somme modeste nécessaire à la vie courante</div><div class="jeton" draggable="true" data-id="j8">Le cumul de plusieurs emprunts ne doit pas être manifestement excessif au regard du train de vie</div><div class="jeton" draggable="true" data-id="j9">Sans consentement du conjoint, l&#x27;époux n&#x27;engage que ses biens propres et ses revenus</div><div class="jeton" draggable="true" data-id="j10">Le conjoint qui donne son consentement exprès n&#x27;engage pas ses biens propres</div></div><p class="aide">Faites glisser les étiquettes, ou touchez une étiquette puis la colonne.</p><div class="zones"><div class="zone" data-zone="a2297"><h4>Art. 2297 C. civ.</h4><p class="desc">Formalisme de la mention</p><div class="depot"></div></div><div class="zone" data-zone="a2299"><h4>Art. 2299 C. civ.</h4><p class="desc">Devoir de mise en garde</p><div class="depot"></div></div><div class="zone" data-zone="a2300"><h4>Art. 2300 C. civ.</h4><p class="desc">Proportionnalité</p><div class="depot"></div></div><div class="zone" data-zone="a220"><h4>Art. 220 C. civ.</h4><p class="desc">Solidarité ménagère</p><div class="depot"></div></div><div class="zone" data-zone="a1415"><h4>Art. 1415 C. civ.</h4><p class="desc">Emprunt et cautionnement en communauté</p><div class="depot"></div></div></div><div class="fb" id="fbT"></div></div>
+<div class="carte"><span class="etiq">Activité 2 — Huit situations</span><div class="scenario">Pour chacune : quel texte s'applique, et quelle est la conséquence exacte ?</div><div style="margin:14px 0 0;padding-top:12px;border-top:1px solid #E8DCE5"><p class="enonce">M. et M<sup>me</sup> Roux sont mariés sous le régime légal. M. Roux emprunte seul 18 000 € pour un camping-car de loisir. Sur quels biens le prêteur peut-il agir ?</p><ul class="opts"><li><label id="cl0_0"><input type="radio" name="ca0" value="0"><span>Sur tous les biens du couple, mariage oblige</span></label></li><li><label id="cl0_1"><input type="radio" name="ca0" value="1"><span>Sur les biens propres et les revenus de M. Roux uniquement</span></label></li><li><label id="cl0_2"><input type="radio" name="ca0" value="2"><span>Sur les biens communs uniquement</span></label></li><li><label id="cl0_3"><input type="radio" name="ca0" value="3"><span>Sur les biens propres des deux époux</span></label></li></ul><div class="fb" id="fca0"></div></div><div style="margin:14px 0 0;padding-top:12px;border-top:1px solid #E8DCE5"><p class="enonce">Même couple, même emprunt, mais M<sup>me</sup> Roux a signé une mention de consentement exprès. Qu'est-ce que cela change ?</p><ul class="opts"><li><label id="cl1_0"><input type="radio" name="ca1" value="0"><span>Elle devient codébitrice et engage tous ses biens</span></label></li><li><label id="cl1_1"><input type="radio" name="ca1" value="1"><span>Les biens communs deviennent saisissables, mais ses biens propres restent hors d&#x27;atteinte</span></label></li><li><label id="cl1_2"><input type="radio" name="ca1" value="2"><span>Rien : seul un engagement de caution l&#x27;aurait engagée</span></label></li><li><label id="cl1_3"><input type="radio" name="ca1" value="3"><span>Les biens propres de M. Roux cessent d&#x27;être engagés</span></label></li></ul><div class="fb" id="fca1"></div></div><div style="margin:14px 0 0;padding-top:12px;border-top:1px solid #E8DCE5"><p class="enonce">M<sup>me</sup> Roux emprunte seule 850 € pour remplacer le réfrigérateur du foyer.</p><ul class="opts"><li><label id="cl2_0"><input type="radio" name="ca2" value="0"><span>Aucune solidarité : l&#x27;article 220 exclut les emprunts</span></label></li><li><label id="cl2_1"><input type="radio" name="ca2" value="1"><span>Solidarité probable : somme modeste nécessaire aux besoins de la vie courante</span></label></li><li><label id="cl2_2"><input type="radio" name="ca2" value="2"><span>Solidarité automatique, quel que soit le montant</span></label></li><li><label id="cl2_3"><input type="radio" name="ca2" value="3"><span>Solidarité seulement si le mari a été informé</span></label></li></ul><div class="fb" id="fca2"></div></div><div style="margin:14px 0 0;padding-top:12px;border-top:1px solid #E8DCE5"><p class="enonce">Un cautionnement porte une mention où le montant est écrit « quinze mille euros » en lettres et « 51 000 € » en chiffres.</p><ul class="opts"><li><label id="cl3_0"><input type="radio" name="ca3" value="0"><span>Le cautionnement est nul pour incohérence</span></label></li><li><label id="cl3_1"><input type="radio" name="ca3" value="1"><span>Il vaut pour 15 000 €, la somme en toutes lettres l&#x27;emportant</span></label></li><li><label id="cl3_2"><input type="radio" name="ca3" value="2"><span>Il vaut pour 51 000 €, les chiffres faisant foi</span></label></li><li><label id="cl3_3"><input type="radio" name="ca3" value="3"><span>Le juge fixe le montant en équité</span></label></li></ul><div class="fb" id="fca3"></div></div><div style="margin:14px 0 0;padding-top:12px;border-top:1px solid #E8DCE5"><p class="enonce">Une caution personne physique s'est engagée pour 80 000 € alors que ses revenus et son patrimoine ne lui permettaient d'assumer que 20 000 €. Quelle est la sanction ?</p><ul class="opts"><li><label id="cl4_0"><input type="radio" name="ca4" value="0"><span>La décharge totale de la caution</span></label></li><li><label id="cl4_1"><input type="radio" name="ca4" value="1"><span>La réduction de l&#x27;engagement à 20 000 €</span></label></li><li><label id="cl4_2"><input type="radio" name="ca4" value="2"><span>La nullité du cautionnement</span></label></li><li><label id="cl4_3"><input type="radio" name="ca4" value="3"><span>La déchéance du droit du créancier à hauteur du préjudice</span></label></li></ul><div class="fb" id="fca4"></div></div><div style="margin:14px 0 0;padding-top:12px;border-top:1px solid #E8DCE5"><p class="enonce">Le créancier professionnel n'a pas alerté la caution alors que l'engagement du débiteur principal était manifestement inadapté aux capacités financières de ce dernier.</p><ul class="opts"><li><label id="cl5_0"><input type="radio" name="ca5" value="0"><span>Le cautionnement est nul</span></label></li><li><label id="cl5_1"><input type="radio" name="ca5" value="1"><span>Le créancier est déchu de son droit contre la caution à hauteur du préjudice subi par celle-ci</span></label></li><li><label id="cl5_2"><input type="radio" name="ca5" value="2"><span>Le cautionnement est réduit de moitié</span></label></li><li><label id="cl5_3"><input type="radio" name="ca5" value="3"><span>Aucune sanction : la mise en garde n&#x27;est due qu&#x27;à l&#x27;emprunteur</span></label></li></ul><div class="fb" id="fca5"></div></div><div style="margin:14px 0 0;padding-top:12px;border-top:1px solid #E8DCE5"><p class="enonce">Un acte de cautionnement solidaire omet de faire reconnaître à la caution qu'elle est privée des bénéfices de discussion et de division.</p><ul class="opts"><li><label id="cl6_0"><input type="radio" name="ca6" value="0"><span>Le cautionnement est nul</span></label></li><li><label id="cl6_1"><input type="radio" name="ca6" value="1"><span>La caution conserve le droit de se prévaloir de ces bénéfices</span></label></li><li><label id="cl6_2"><input type="radio" name="ca6" value="2"><span>La solidarité s&#x27;applique malgré tout</span></label></li><li><label id="cl6_3"><input type="radio" name="ca6" value="3"><span>Le créancier doit faire signer un avenant sous huit jours</span></label></li></ul><div class="fb" id="fca6"></div></div><div style="margin:14px 0 0;padding-top:12px;border-top:1px solid #E8DCE5"><p class="enonce">Un client souhaite garantir un crédit à la consommation par une hypothèque sur sa résidence.</p><ul class="opts"><li><label id="cl7_0"><input type="radio" name="ca7" value="0"><span>C&#x27;est la garantie usuelle du crédit à la consommation</span></label></li><li><label id="cl7_1"><input type="radio" name="ca7" value="1"><span>L&#x27;hypothèque porte sur un immeuble et relève du crédit immobilier</span></label></li><li><label id="cl7_2"><input type="radio" name="ca7" value="2"><span>C&#x27;est possible seulement au-delà de 50 000 €</span></label></li><li><label id="cl7_3"><input type="radio" name="ca7" value="3"><span>Il faut l&#x27;accord préalable de la Banque de France</span></label></li></ul><div class="fb" id="fca7"></div></div></div>
+<div class="carte"><span class="etiq">Activité 3 — Vrai ou faux</span><div class="scenario">Six affirmations sur l'assurance, le cautionnement et les régimes matrimoniaux.</div><div style="margin:14px 0 0;padding-top:12px;border-top:1px solid #E8DCE5"><p class="enonce">L&#x27;assurance emprunteur est légalement obligatoire en crédit à la consommation.</p><ul class="opts"><li><label id="vl0_1"><input type="radio" name="vf0" value="1"><span>Vrai</span></label></li><li><label id="vl0_0"><input type="radio" name="vf0" value="0"><span>Faux</span></label></li></ul><div class="fb" id="fv0"></div></div><div style="margin:14px 0 0;padding-top:12px;border-top:1px solid #E8DCE5"><p class="enonce">Depuis la loi Lagarde, l&#x27;emprunteur peut choisir librement son assurance, sous réserve d&#x27;un niveau de garantie équivalent.</p><ul class="opts"><li><label id="vl1_1"><input type="radio" name="vf1" value="1"><span>Vrai</span></label></li><li><label id="vl1_0"><input type="radio" name="vf1" value="0"><span>Faux</span></label></li></ul><div class="fb" id="fv1"></div></div><div style="margin:14px 0 0;padding-top:12px;border-top:1px solid #E8DCE5"><p class="enonce">La loi Lemoine permet à un emprunteur de résilier à tout moment l&#x27;assurance de son crédit à la consommation.</p><ul class="opts"><li><label id="vl2_1"><input type="radio" name="vf2" value="1"><span>Vrai</span></label></li><li><label id="vl2_0"><input type="radio" name="vf2" value="0"><span>Faux</span></label></li></ul><div class="fb" id="fv2"></div></div><div style="margin:14px 0 0;padding-top:12px;border-top:1px solid #E8DCE5"><p class="enonce">Le cautionnement peut porter sur un montant supérieur à la dette principale.</p><ul class="opts"><li><label id="vl3_1"><input type="radio" name="vf3" value="1"><span>Vrai</span></label></li><li><label id="vl3_0"><input type="radio" name="vf3" value="0"><span>Faux</span></label></li></ul><div class="fb" id="fv3"></div></div><div style="margin:14px 0 0;padding-top:12px;border-top:1px solid #E8DCE5"><p class="enonce">L&#x27;article 1415 s&#x27;applique quel que soit le régime matrimonial des époux.</p><ul class="opts"><li><label id="vl4_1"><input type="radio" name="vf4" value="1"><span>Vrai</span></label></li><li><label id="vl4_0"><input type="radio" name="vf4" value="0"><span>Faux</span></label></li></ul><div class="fb" id="fv4"></div></div><div style="margin:14px 0 0;padding-top:12px;border-top:1px solid #E8DCE5"><p class="enonce">Une présence du conjoint lors de la signature vaut consentement exprès au sens de l&#x27;article 1415.</p><ul class="opts"><li><label id="vl5_1"><input type="radio" name="vf5" value="1"><span>Vrai</span></label></li><li><label id="vl5_0"><input type="radio" name="vf5" value="0"><span>Faux</span></label></li></ul><div class="fb" id="fv5"></div></div></div>
+ <div class="bilan" id="bilan">
+  <div class="tete" id="bilan-tete"><div class="pct" id="bilan-pct">0 %</div><div class="lib" id="bilan-lib"></div></div>
+  <div class="corps" id="bilan-corps"></div>
+ </div>
+ <div class="barre-actions">
+  <button class="principal" id="btn-valider">Vérifier mes réponses</button>
+  <button class="secondaire" id="btn-refaire">Refaire l'exercice</button>
+ </div>
+</div>
+<footer class="pied">TMK Performances - N° Siret : 49841924100027 - Code NAF : 8559A</footer>
+<script>
+(function(){
+  function libre(e){ var t=e.target; return t && (t.tagName==='TEXTAREA'||t.tagName==='INPUT'); }
+  ['copy','cut','contextmenu'].forEach(function(ev){
+    document.addEventListener(ev,function(e){ if(!libre(e)) e.preventDefault(); });
+  });
+  document.addEventListener('keydown',function(e){
+    if(libre(e)) return;
+    var k=(e.key||'').toLowerCase();
+    if((e.ctrlKey||e.metaKey) && ['c','x','a','s','p','u'].indexOf(k)>-1) e.preventDefault();
+  });
+})();
+function palier(p){
+  if(p>=90) return {lib:'Excellent', c:'#2F7A4F'};
+  if(p>=70) return {lib:'Validé', c:'#3F7A5E'};
+  if(p>=50) return {lib:'À consolider', c:'#B5852A'};
+  return {lib:'À retravailler', c:'#B23B3B'};
+}
+function afficherBilan(bon,total,texte){
+  var p = total? Math.round(bon*100/total):0, pa=palier(p);
+  document.getElementById('bilan-tete').style.background=pa.c;
+  document.getElementById('bilan-pct').textContent=p+' %';
+  document.getElementById('bilan-lib').textContent=pa.lib+' — '+bon+' / '+total;
+  document.getElementById('bilan-corps').innerHTML=texte;
+  var b=document.getElementById('bilan'); b.classList.add('on');
+  b.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+
+var JZ={"j1": "a2297", "j2": "a2297", "j3": "a2297", "j4": "a2299", "j5": "a2299", "j6": "a2300", "j7": "a220", "j8": "a220", "j9": "a1415", "j10": "a1415"}, JL={"j1": "La caution appose elle-même la mention, à peine de nullité", "j2": "En cas de différence, la somme en toutes lettres l'emporte", "j3": "La privation des bénéfices de discussion et de division doit être reconnue dans la mention", "j4": "Le créancier professionnel alerte la caution quand l'engagement du débiteur est inadapté à ses capacités", "j5": "Sanction : déchéance du droit du créancier à hauteur du préjudice subi par la caution", "j6": "L'engagement manifestement disproportionné aux revenus et au patrimoine de la caution est réduit", "j7": "Un emprunt n'engage pas solidairement le conjoint, sauf somme modeste nécessaire à la vie courante", "j8": "Le cumul de plusieurs emprunts ne doit pas être manifestement excessif au regard du train de vie", "j9": "Sans consentement du conjoint, l'époux n'engage que ses biens propres et ses revenus", "j10": "Le conjoint qui donne son consentement exprès n'engage pas ses biens propres"}, JE={"j1": "Article 2297 : formalisme de l'engagement. Le texte ne dit plus « manuscrite » — ce qui compte est que la caution l'écrive elle-même.", "j2": "Même article : le montant doit figurer en toutes lettres et en chiffres, et les lettres priment.", "j3": "Article 2297 encore. À défaut, la caution conserve le droit de s'en prévaloir : le cautionnement redevient simple.", "j4": "Article 2299 : la mise en garde porte sur les capacités du DÉBITEUR, non sur celles de la caution.", "j5": "Sanction propre à la mise en garde. Ce n'est ni une nullité, ni une réduction.", "j6": "Article 2300 : la disproportion s'apprécie sur la CAUTION, et la sanction est la réduction — non plus la décharge totale depuis le 1er janvier 2022.", "j7": "Article 220 : les emprunts sont exclus de la solidarité ménagère, avec une exception étroite et cumulative.", "j8": "Toujours l'article 220 : trois emprunts modestes peuvent, ensemble, cesser de l'être.", "j9": "Article 1415, sous les régimes de communauté. Les biens communs restent hors d'atteinte.", "j10": "C'est la fin de l'article 1415, celle que l'on oublie : le conjoint consent, il ne devient pas codébiteur."}, ZL={"a2297": "Art. 2297 C. civ.", "a2299": "Art. 2299 C. civ.", "a2300": "Art. 2300 C. civ.", "a220": "Art. 220 C. civ.", "a1415": "Art. 1415 C. civ."}, CS=[{"c": 1, "e": "L'article 220 exclut les emprunts de la solidarité, et l'exception ne joue pas : 18 000 € pour un camping-car de loisir n'est ni modeste ni nécessaire à la vie courante. On applique donc l'article 1415 : sans consentement exprès, M. Roux n'engage que ses biens propres et ses revenus. La maison commune est hors d'atteinte.", "opts": ["Sur tous les biens du couple, mariage oblige", "Sur les biens propres et les revenus de M. Roux uniquement", "Sur les biens communs uniquement", "Sur les biens propres des deux époux"]}, {"c": 1, "e": "Le consentement exprès étend le gage aux biens communs. Mais l'article 1415 précise que le conjoint qui consent n'engage pas ses biens propres : il a donné un accord, il n'a pas emprunté.", "opts": ["Elle devient codébitrice et engage tous ses biens", "Les biens communs deviennent saisissables, mais ses biens propres restent hors d'atteinte", "Rien : seul un engagement de caution l'aurait engagée", "Les biens propres de M. Roux cessent d'être engagés"]}, {"c": 1, "e": "C'est l'exception de l'article 220. Les trois conditions sont réunies : somme modeste, nécessité pour la vie courante, et cumul non excessif. M. Roux est tenu solidairement sans avoir signé.", "opts": ["Aucune solidarité : l'article 220 exclut les emprunts", "Solidarité probable : somme modeste nécessaire aux besoins de la vie courante", "Solidarité automatique, quel que soit le montant", "Solidarité seulement si le mari a été informé"]}, {"c": 1, "e": "L'article 2297 tranche expressément : en cas de différence, le cautionnement vaut pour la somme écrite en toutes lettres. Il n'y a ni nullité ni pouvoir d'appréciation du juge sur ce point.", "opts": ["Le cautionnement est nul pour incohérence", "Il vaut pour 15 000 €, la somme en toutes lettres l'emportant", "Il vaut pour 51 000 €, les chiffres faisant foi", "Le juge fixe le montant en équité"]}, {"c": 1, "e": "Depuis la réforme entrée en vigueur le 1er janvier 2022, l'article 2300 prévoit la réduction au montant à hauteur duquel la caution pouvait s'engager. La décharge totale était la solution antérieure ; la déchéance à hauteur du préjudice sanctionne, elle, le défaut de mise en garde.", "opts": ["La décharge totale de la caution", "La réduction de l'engagement à 20 000 €", "La nullité du cautionnement", "La déchéance du droit du créancier à hauteur du préjudice"]}, {"c": 1, "e": "C'est la sanction propre à l'article 2299. Attention à ne pas la confondre avec la réduction de l'article 2300 : la mise en garde regarde le débiteur, la proportionnalité regarde la caution.", "opts": ["Le cautionnement est nul", "Le créancier est déchu de son droit contre la caution à hauteur du préjudice subi par celle-ci", "Le cautionnement est réduit de moitié", "Aucune sanction : la mise en garde n'est due qu'à l'emprunteur"]}, {"c": 1, "e": "Sanction élégante et redoutable : le cautionnement reste valable mais redevient simple. Le créancier perd le bénéfice de la solidarité pour un défaut de rédaction.", "opts": ["Le cautionnement est nul", "La caution conserve le droit de se prévaloir de ces bénéfices", "La solidarité s'applique malgré tout", "Le créancier doit faire signer un avenant sous huit jours"]}, {"c": 1, "e": "En crédit à la consommation, on rencontre le gage — sur véhicule notamment — et le nantissement. Citer l'hypothèque est l'erreur classique du module.", "opts": ["C'est la garantie usuelle du crédit à la consommation", "L'hypothèque porte sur un immeuble et relève du crédit immobilier", "C'est possible seulement au-delà de 50 000 €", "Il faut l'accord préalable de la Banque de France"]}], VF=[{"r": false, "e": "Faux. Aucune disposition légale n'impose de s'assurer ; en crédit à la consommation, l'assurance est en principe facultative — ce qui ne l'empêche pas d'être systématiquement proposée, et parfois exigée en fait.", "ref": "art. L. 312-14 et s. C. consom."}, {"r": true, "e": "Exact. C'est la délégation d'assurance. Le prêteur ne peut ni refuser un contrat équivalent, ni modifier les conditions du crédit en représailles.", "ref": "loi n° 2010-737 du 1er juillet 2010"}, {"r": false, "e": "Faux. Les dispositifs Hamon, Bourquin et Lemoine — résiliation à tout moment, suppression du questionnaire de santé sous conditions — visent le crédit immobilier. Ne pas les transposer au crédit à la consommation.", "ref": "loi n° 2022-270 du 28 février 2022"}, {"r": false, "e": "Faux. Le cautionnement est une garantie accessoire : il ne peut excéder la dette principale et s'éteint avec elle.", "ref": "art. 2296 C. civ."}, {"r": false, "e": "Faux. Il ne concerne que les régimes de communauté : sous séparation de biens, il n'existe pas de masse commune à protéger.", "ref": "art. 1415 C. civ."}, {"r": false, "e": "Faux. Le consentement doit être donné expressément et viser cet engagement-là. Présence à la signature, connaissance de l'opération ou accord verbal sont insuffisants. En pratique, faites signer une mention distincte, datée et visant l'opération.", "ref": "art. 1415 C. civ."}];
+var NJ=Object.keys(JZ).length, valide=false, actif=null;
+var TOTAL = NJ + CS.length + VF.length;
+
+function placesJ(){ return document.querySelectorAll('.zone .depot .jeton').length; }
+function progresse(){
+  var n = placesJ();
+  for(var i=0;i<CS.length;i++){ if(document.querySelector('input[name="ca'+i+'"]:checked')) n++; }
+  for(var m=0;m<VF.length;m++){ if(document.querySelector('input[name="vf'+m+'"]:checked')) n++; }
+  document.getElementById('jauge').style.width = Math.round(n*100/TOTAL)+'%';
+  document.getElementById('compteur').textContent = n+' / '+TOTAL+' réponses';
+  document.getElementById('btn-valider').disabled = (n<TOTAL) || (placesJ()!==NJ) || valide;
+}
+document.querySelectorAll('input[type=radio]').forEach(function(x){ x.addEventListener('change', progresse); });
+function deselect(){ if(actif){ actif.classList.remove('actif'); actif=null; } }
+function deposer(j,c){ if(valide) return; c.appendChild(j); deselect(); progresse(); }
+var res=document.getElementById('reserve');
+document.querySelectorAll('.jeton').forEach(function(j){
+  j.addEventListener('click', function(e){
+    if(valide) return; e.stopPropagation();
+    if(actif && actif!==j){
+      var c=j.parentElement;
+      if(c.classList.contains('depot')||c.classList.contains('reserve')){ deposer(actif,c); return; }
+    }
+    if(j.parentElement.classList.contains('depot')){ deposer(j,res); return; }
+    if(actif===j){ deselect(); return; }
+    deselect(); actif=j; j.classList.add('actif');
+  });
+  j.addEventListener('dragstart', function(e){
+    if(valide){ e.preventDefault(); return; }
+    actif=j; e.dataTransfer.setData('text/plain', j.dataset.id);
+  });
+});
+document.querySelectorAll('.zone').forEach(function(z){
+  var dep=z.querySelector('.depot');
+  z.addEventListener('dragover', function(e){ if(!valide){ e.preventDefault(); z.classList.add('survol'); } });
+  z.addEventListener('dragleave', function(){ z.classList.remove('survol'); });
+  z.addEventListener('drop', function(e){ e.preventDefault(); z.classList.remove('survol'); if(actif) deposer(actif,dep); });
+  z.addEventListener('click', function(){ if(actif) deposer(actif,dep); });
+});
+res.addEventListener('dragover', function(e){ if(!valide) e.preventDefault(); });
+res.addEventListener('drop', function(e){ e.preventDefault(); if(actif) deposer(actif,res); });
+res.addEventListener('click', function(){ if(actif) deposer(actif,res); });
+document.body.addEventListener('click', deselect);
+
+document.getElementById('btn-valider').addEventListener('click', function(e){
+  e.stopPropagation();
+  if(valide) return; valide=true; deselect();
+  var bon=0, bonJ=0, li='';
+  Object.keys(JZ).forEach(function(id){
+    var j=document.querySelector('.jeton[data-id="'+id+'"]');
+    var z=j.closest('.zone'), juste = z && z.dataset.zone===JZ[id];
+    j.classList.add(juste?'bon':'faux'); j.setAttribute('draggable','false');
+    if(juste) bonJ++; else li += '<li><b>'+JL[id]+'</b> → '+ZL[JZ[id]]+'. '+JE[id]+'</li>';
+  });
+  bon += bonJ;
+  var ft=document.getElementById('fbT');
+  ft.innerHTML='<span class="verdict">'+(bonJ===NJ?'✓ Chaque règle est au bon article':'✗ '+bonJ+' / '+NJ+' bien rattachées')+'</span>'
+    + (li ? '<b>À corriger :</b><ul style="margin:8px 0 0;padding-left:20px">'+li+'</ul>'
+          : 'Les cinq articles sont distingués sans hésitation.');
+  ft.className='fb on '+(bonJ===NJ?'j':'n');
+  for(var i=0;i<CS.length;i++){
+    var ch=document.querySelector('input[name="ca'+i+'"]:checked');
+    var idx=ch?parseInt(ch.value,10):-1, juste3=(idx===CS[i].c);
+    if(juste3) bon++;
+    document.getElementById('cl'+i+'_'+CS[i].c).classList.add('bonne');
+    if(!juste3 && idx>=0) document.getElementById('cl'+i+'_'+idx).classList.add('mauvaise');
+    document.querySelectorAll('input[name="ca'+i+'"]').forEach(function(r){ r.disabled=true; });
+    var f3=document.getElementById('fca'+i);
+    var h3='<span class="verdict">'+(juste3?'✓ Exact':'✗ Inexact')+'</span>';
+    if(!juste3) h3 += '<div style="margin-bottom:6px"><b>Réponse attendue :</b> '+CS[i].opts[CS[i].c]+'</div>';
+    f3.innerHTML = h3 + CS[i].e;
+    f3.className='fb on '+(juste3?'j':'n');
+  }
+  for(var m=0;m<VF.length;m++){
+    var ch2=document.querySelector('input[name="vf'+m+'"]:checked');
+    var rep=ch2?(ch2.value==='1'):null, juste4=(rep===VF[m].r);
+    if(juste4) bon++;
+    document.getElementById('vl'+m+'_'+(VF[m].r?1:0)).classList.add('bonne');
+    if(!juste4 && ch2) document.getElementById('vl'+m+'_'+ch2.value).classList.add('mauvaise');
+    document.querySelectorAll('input[name="vf'+m+'"]').forEach(function(r){ r.disabled=true; });
+    var f4=document.getElementById('fv'+m);
+    f4.innerHTML='<span class="verdict">'+(juste4?'✓ Exact':'✗ Inexact')+'</span>'+VF[m].e
+               +'<span class="ref">'+VF[m].ref+'</span>';
+    f4.className='fb on '+(juste4?'j':'n');
+  }
+  document.getElementById('btn-valider').disabled=true;
+  document.getElementById('btn-valider').textContent='Atelier validé';
+  afficherBilan(bon, TOTAL,
+    'Cet exercice n\'est pas noté et ne laisse aucune trace : refaites-le autant de fois que nécessaire. '
+    + 'Les trois questions de secours : <b>de quelle dette s\'agit-il · l\'emprunt est-il modeste et '
+    + 'nécessaire à la vie courante · le conjoint a-t-il consenti expressément</b>. Quand les trois activités '
+    + 'passent sans hésitation, enchaînez sur le <b>QCM du module 6</b>.');
+});
+progresse();
+
+document.getElementById('btn-refaire').addEventListener('click',function(){ location.reload(); });
+</script></body></html>
